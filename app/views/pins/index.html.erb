@@ -1,0 +1,27 @@
+<h1>Listing pins</h1>
+
+<table>
+  <tr>
+    <th>Track</th>
+    <th>Startpin</th>
+    <th>Stoppin</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @pins.each do |pin| %>
+  <tr>
+    <td><%= pin.track_id %></td>
+    <td><%= pin.startpin %></td>
+    <td><%= pin.stoppin %></td>
+    <td><%= link_to 'Show', pin %></td>
+    <td><%= link_to 'Edit', edit_pin_path(pin) %></td>
+    <td><%= link_to 'Destroy', pin, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Pin', new_pin_path %>

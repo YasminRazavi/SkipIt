@@ -1,0 +1,35 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>User:</b>
+  <%= @playlist.user_id %>
+</p>
+
+<p>
+  <b>Name:</b>
+  <%= @playlist.playlist_name %>
+</p>
+
+<p>
+  <b>Tracks:</b>
+  <% @playlist.tracks.each do |track| %>
+  <div id="track_<%= track.id %>">
+  <h3> Track name: </h3>
+  <%= track.name %> <br>
+  <h3> Track Artist: </h3>
+  <%= track.artist %> <br>
+
+
+  <h3> Track Link: </h3>
+  <%= track.url %> <br>
+    
+    <div data-pins="<%=map_pins(track)%>" data-id="<%=track.id%>" class="player" data-url="<%=track.url%>" id="track-holder-<%=track.id%>"> Hi</div>
+  </div>
+
+  <%end%>
+</p>
+
+
+
+<%= link_to 'Edit', edit_playlist_path(@playlist) %> |
+<%= link_to 'Back', playlists_path %>

@@ -1,0 +1,20 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Track:</b>
+  <%= @pin.track_id %>
+</p>
+
+<p>
+  <b>Startpin:</b>
+  <%= @pin.startpin %>
+</p>
+
+<p>
+  <b>Stoppin:</b>
+  <%= @pin.stoppin %>
+</p>
+
+
+<%= link_to 'Edit', edit_pin_path(@pin) %> |
+<%= link_to 'Back', pins_path %>
