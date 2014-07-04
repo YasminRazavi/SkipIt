@@ -11,3 +11,21 @@
  *= require_self
  *= require_tree .
  */
+
+.player {
+
+  text-align: center;
+
+}
+
+.play-button {
+
+  width: 7%
+}
+
+.play-button:hover {
+    opacity: 0.4;
+    filter: alpha(opacity=100); 
+    cursor: pointer; 
+    cursor: hand;
+}

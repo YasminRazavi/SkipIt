@@ -1,35 +1,17 @@
 <p id="notice"><%= notice %></p>
 
-<p>
-  <b>User:</b>
-  <%= @playlist.user_id %>
-</p>
 
-<p>
-  <b>Name:</b>
-  <%= @playlist.playlist_name %>
-</p>
-
-<p>
-  <b>Tracks:</b>
+<%= image_tag("/assets/play.jpg", :class=>"play-button") %>
   <% @playlist.tracks.each do |track| %>
   <div id="track_<%= track.id %>">
-  <h3> Track name: </h3>
-  <%= track.name %> <br>
-  <h3> Track Artist: </h3>
-  <%= track.artist %> <br>
-
-
-  <h3> Track Link: </h3>
-  <%= track.url %> <br>
-    
-    <div data-pins="<%=map_pins(track)%>" data-id="<%=track.id%>" class="player" data-url="<%=track.url%>" id="track-holder-<%=track.id%>"> Hi</div>
-  </div>
-
+    <% track.pins.each_with_index do |pin, i| %>
+      <div data-pins="<%=map_pins(track)%>" data-id="<%=track.id%>" class="player" data-url="<%=track.url%>" id="track-holder-<%=track.id%>-<%=i%>" data-duration="<%=pin.stoppin-pin.startpin%>" data-start="<%=pin.startpin%>" data-stop"<%=pin.stoppin%>"</div>
+    </div>
+    <%end%>
   <%end%>
 </p>
 
 
 
 <%= link_to 'Edit', edit_playlist_path(@playlist) %> |
-<%= link_to 'Back', playlists_path %>
+
