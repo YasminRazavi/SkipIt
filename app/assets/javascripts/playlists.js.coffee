@@ -1,44 +1,71 @@
+embedTrackToEdit = (url, div) ->
+  SC.oEmbed(
+        url, 
+       {auto_play: false
+           , color: "FFFFEC"
+           , theme_color: "14575C"
+           , maxwidth: 1000
+           , maxheight: 200
+           , enable_api: true
+           , iframe: true
+           , buying: false
+           , download: false
+           , show_playcount: false
+           , sharing: false
+           , show_artwork: false
+           }, 
+        div
+      )
+AddNewTrack = (data) ->
+  url = data.url
+  alert("yo made it to new track")
+  html =  "
+    <tr class='buttons'>
+      <td><a href='/tracks/#{data.id}/edit' class='edit_track_button' %>Edit</td>
+      <td><a href='/tracks/#{data.id}', track, method: 'delete', data: { confirm: 'Are you sure?' }, class='edit_track_button'>Delete</td>
+      <td><a href='/pins/new', class='edit_track_button'>Pin</td>
+    </tr>
+    <tr>
+      <td class='x'>
+        <div class='players-holder'>  
+           <div data-pins='#{[]}' data-id='#{data.id}' class='player edit' data-url='#{data.url}' id='track-holder-#{data.id}' data-duration='#{data.duration}'></div>
+        </div> 
+      </td>
+    </tr>"
+
+  $(".table_tracks_for_edit").prepend(html)
+  div = document.getElementById("track-holder-#{data.id}")
+  embedTrackToEdit(url, div) 
+
 addWidgets = ->
 
   $(".player").each (i, track) ->
-    console.log i
+    console.log $(".player")
     url = $(@).data("url")
     track_id = $(@).data("id")
     pins = $(@).data("pins")
-    console.log("start pin", pins[0][0])
-    console.log("sop pin", pins[0][1])
-
+    console.log("pins", pins)
     if $('.player').hasClass('edit')
-      SC.oEmbed(
-        url, 
-        {auto_play: false
-         , color: "915f33"
-         , maxwidth: 1000
-         , maxheight: 200
-         , enable_api: true
-         , iframe: true
-         }, 
-        document.getElementById("track-holder-#{track_id}")
-      )
-      # player_div = document.getElementById("track-holder-#{track_id}")
-      # player_iframe = player_div.getElementsByTagName("iframe")[0]
-      # setTimeout( ->
-      #   widget = SC.Widget(player_iframe)
-      #   widget.getDuration((duration)->
-      #     console.log("duratio",duration)
-      #     $(player_div).data("duration",duration)
-      #   )
-      # , 20000)
+      div = document.getElementById("track-holder-#{track_id}")
+      console.log("div", div)
+      embedTrackToEdit(url, div )
+
     else
       $(pins).each (i, pin) ->
         SC.oEmbed(
           url, 
           {auto_play: false
-           , color: "915f33"
-           , maxwidth: 1000
-           , maxheight: 200
+           , color: "FFFFEC"
+           , theme_color: "14575C"
+           , maxwidth: 1100
+           , maxheight: 300
            , enable_api: true
            , iframe: true
+           , buying: false
+           , download: false
+           , show_playcount: false
+           , sharing: false
+           , show_artwork: false
            }, 
           document.getElementById("track-holder-#{track_id}-#{i}")
         )
@@ -48,10 +75,6 @@ addWidgets = ->
           console.log("player_iframe", player_iframe)
 
           widget = SC.Widget(player_iframe)
-
-          widget.getDuration((duration)->
-            $(player_div).data("duration",duration)
-            )
 
           widget.bind(SC.Widget.Events.LOAD_PROGRESS, (e)->
             if (e.loadedProgress && e.loadedProgress == 1) 
@@ -77,9 +100,15 @@ playTrack = (playlist)->
   player_iframe = player_div.getElementsByTagName("iframe")[0]
   widget = SC.Widget(player_iframe)
   widget.play()
-  # widget.setVolume(0)
-  # widget.setVolume(100)
   widget.bind(SC.Widget.Events.PAUSE, -> 
+    widget.seekTo(start_pin) 
+    widget.bind(SC.Widget.Events.PLAY_PROGRESS, (e)->
+          if (e.currentPosition > stop_pin)
+            widget.pause()
+        )
+    playTrack(playlist) if playlist.length >0
+    )
+  widget.bind(SC.Widget.Events.FINISH, -> 
     widget.seekTo(start_pin) 
     widget.bind(SC.Widget.Events.PLAY_PROGRESS, (e)->
           if (e.currentPosition > stop_pin)
@@ -100,36 +129,65 @@ playPlaylist = ->
 
 addPins = ->
   $(".pins").each (i, pin) ->
-    console.log(pin, i)
     track = $(@).data("track")
-    console.log("track", track)
     pin = $(@).data("pin")
-    console.log("pin", pin)
     start = $(@).data("start")
-    console.log("start", start)
     stop = $(@).data("stop")
-    console.log("stop", stop)
+    duration = $(@).data("duration")
     target_pin = "#pin-"+track+"-"+pin
-    console.log("target pin", target_pin)
     $(target_pin).slider({
       range: true,
       min: 0,
-      max: 100,
-      values: [ 20, 50],
+      max: duration,
+      values: [ start, stop],
       slide: ( event, ui ) ->
-        $("#play_range").val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
-      
+        $("#play_range_start-#{track}-#{pin}").html(ui.values[ 0 ] )
+        $("#play_range_stop-#{track}-#{pin}").html(ui.values[ 1] ) 
     })
-    # $("#play_range").val( "$" + $(pin ).slider( "values", 0 ) +
-    #   " - $" + $(pin ).slider( "values", 1 ) );
-    
+    $("#play_range_start-#{track}-#{pin}").html($(target_pin).slider( "values", 0 ))
+    $("#play_range_stop-#{track}-#{pin}").html($(target_pin).slider( "values", 1))
 
+addTrackToPlaylist =  ->
+  console.log("adding track")
+  url = $(".new_track").val()
+  playlist_id = $(this).data("id")
+  $.ajax "/tracks",
+    type: 'POST'
+    data: {track: {url: url, playlist_id:playlist_id}}
+    dataType: 'json'
+    success: (data, textStatus, jqXHR) ->
+      console.log(data)
+      AddNewTrack(data)
 
+editPins = (e) ->
+  e.preventDefault()
+  track_id= $(this).data("id")
+  div = ".pins_for_edit_container#pins-#{track_id}"
+  $(div).show()
+
+updatePins = (e) ->
+  track_id = $(this).data("track")
+  pin_id = $(this).data("pin")
+  startpin =  $("#play_range_start-#{track_id}-#{pin_id}").html()
+  stoppin = $("#play_range_stop-#{track_id}-#{pin_id}").html()
+  $.ajax "/pins/#{pin_id}",
+    type: 'PUT'
+    data: {pin:{id: pin_id, track_id: track_id, startpin:startpin, stoppin: stoppin}}
+    dataType: 'json'
+    success: (data, textStatus, jqXHR) ->
+      console.log "yessss"
+      console.log data
+
+  
    
 $ ->
   $(document).on "click", ".play-button", playPlaylist
   # if !!$(".player").length 
   #   $(".player")[0].scrollTo( $('.actie-player'))
+  $(document).on "click", "#new_track_button", addTrackToPlaylist
+  $(".pins_for_edit_container").hide()
+  $(document).on "click", ".edit-track", editPins
+  $(document).on "click", ".update", updatePins
 
 $(window).load -> 
     addWidgets()

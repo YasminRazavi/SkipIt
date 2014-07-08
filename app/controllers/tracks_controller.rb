@@ -5,9 +5,10 @@ class TracksController < ApplicationController
 
   def index
     if params[:id] != nil
-      @tracks = Playlist.find(params[:id]).tracks
+      @tracks = Playlist.find(params[:id]).tracks.reverse!
+      @playlist = Playlist.find(params[:id])
     else
-      @tracks = Track.all
+      @tracks = Track.all.reverse!
     end
     respond_to do |format|
       format.html # index.html.erb
@@ -48,6 +49,12 @@ class TracksController < ApplicationController
   # POST /tracks
   # POST /tracks.json
   def create
+    client = Soundcloud.new(:client_id => '44eb1fb2fd831aed03620d757489bdd6')
+    params[:track][:user_id] = current_user.id
+    track_url = params[:track][:url]
+    track = client.get('/resolve', :url => track_url)
+    params[:track][:duration] = track.duration
+    # params[:track][:duration] = 
     @track = Track.new(params[:track])
     # authorize! :create, @track
 

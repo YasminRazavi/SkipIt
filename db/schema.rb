@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140701102915) do
+ActiveRecord::Schema.define(:version => 20140708075525) do
 
   create_table "pins", :force => true do |t|
     t.integer  "track_id"
@@ -37,6 +37,7 @@ ActiveRecord::Schema.define(:version => 20140701102915) do
     t.datetime "updated_at",  :null => false
     t.string   "artist"
     t.string   "name"
+    t.integer  "duration"
   end
 
   create_table "users", :force => true do |t|

@@ -1,18 +1,26 @@
 <p id="notice"><%= notice %></p>
 
 
-<%= image_tag("/assets/play.jpg", :class=>"play-button") %>
+
 
 <%= link_to 'Edit',  tracks_playlist_path(@playlist) %> 
 
 <div class="active-player">
+  <div class="play-button"></div>
   <div class="players-holder">
     <% @playlist.tracks.each do |track| %>
-      <% track.pins.each_with_index do |pin, i| %>
-      <div id="track_<%= track.id %>">
-        <div data-pins="<%=map_pins(track)%>" data-id="<%=track.id%>" class="player" data-url="<%=track.url%>" id="track-holder-<%=track.id%>-<%=i%>" data-start="<%=pin.startpin%>" data-stop="<%=pin.stoppin%>">
+      <% if !track.pins.empty? %>
+        <% track.pins.each_with_index do |pin, i| %>
+        <div id="track_<%= track.id %>">
+          <div data-pins="<%=map_pins(track)%>" data-id="<%=track.id%>" class="player" data-url="<%=track.url%>" id="track-holder-<%=track.id%>-<%=i%>" data-start="<%=pin.startpin%>" data-stop="<%=pin.stoppin%>" data-duration="<%=track.duration%>">
+          </div>
         </div>
-      </div>
+        <%end%>
+      <%else%>
+        <div id="track_<%= track.id %>">
+          <div data-pins="[[0,<%=track.duration%>]]" data-id="<%=track.id%>" class="player" data-url="<%=track.url%>" id="track-holder-<%=track.id%>-0" data-start="0" data-stop="<%=track.duration%>" data-duration="<%=track.duration%>">
+          </div>
+        </div>
       <%end%>
     <%end%>
   </div>
