@@ -1,25 +1,29 @@
 body {
-  background-color: #fff;
-  color: #333;
+  background-color: rgb(17,61,71);
+  color: white;
   font-family: verdana, arial, helvetica, sans-serif;
   font-size: 13px;
   line-height: 18px;
+  z-index: -100;
 }
 
 p, ol, ul, td {
   font-family: verdana, arial, helvetica, sans-serif;
   font-size: 13px;
   line-height: 18px;
+  color:white;
 }
 
 pre {
   background-color: #eee;
   padding: 10px;
   font-size: 11px;
+  color:white;
 }
 
 a {
   color: #000;
+  color:white;
   &:visited {
     color: #666;
   }

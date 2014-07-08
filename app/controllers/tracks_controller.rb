@@ -1,9 +1,14 @@
 class TracksController < ApplicationController
   # GET /tracks
   # GET /tracks.json
-  def index
-    @tracks = Track.all
+  before_filter :authenticate_user!
 
+  def index
+    if params[:id] != nil
+      @tracks = Playlist.find(params[:id]).tracks
+    else
+      @tracks = Track.all
+    end
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @tracks }
@@ -25,6 +30,7 @@ class TracksController < ApplicationController
   # GET /tracks/new.json
   def new
     @track = Track.new
+    # authorize! :new, @track
 
     respond_to do |format|
       format.html # new.html.erb
@@ -35,12 +41,15 @@ class TracksController < ApplicationController
   # GET /tracks/1/edit
   def edit
     @track = Track.find(params[:id])
+    # authorize! :edit, @track
+
   end
 
   # POST /tracks
   # POST /tracks.json
   def create
     @track = Track.new(params[:track])
+    # authorize! :create, @track
 
     respond_to do |format|
       if @track.save

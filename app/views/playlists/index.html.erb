@@ -12,7 +12,7 @@
 <% @playlists.each do |playlist| %>
   <tr>
     <td><%= playlist.user_id %></td>
-    <td><%= playlist.track_id %></td>
+    <td><%= playlist.playlist_name %></td>
     <td><%= link_to 'Show', playlist %></td>
     <td><%= link_to 'Edit', edit_playlist_path(playlist) %></td>
     <td><%= link_to 'Destroy', playlist, method: :delete, data: { confirm: 'Are you sure?' } %></td>

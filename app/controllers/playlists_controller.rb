@@ -1,6 +1,8 @@
 class PlaylistsController < ApplicationController
   # GET /playlists
   # GET /playlists.json
+  # before_filter :authenticate_user!
+
   def index
     @playlists = Playlist.all
 
@@ -25,6 +27,7 @@ class PlaylistsController < ApplicationController
   # GET /playlists/new.json
   def new
     @playlist = Playlist.new
+    # authorize! :new, @playlist
 
     respond_to do |format|
       format.html # new.html.erb
@@ -35,12 +38,15 @@ class PlaylistsController < ApplicationController
   # GET /playlists/1/edit
   def edit
     @playlist = Playlist.find(params[:id])
+    # authorize! :edit, @playlist
+
   end
 
   # POST /playlists
   # POST /playlists.json
   def create
     @playlist = Playlist.new(params[:playlist])
+    # authorize! :create, @playlist
 
     respond_to do |format|
       if @playlist.save
@@ -57,6 +63,7 @@ class PlaylistsController < ApplicationController
   # PUT /playlists/1.json
   def update
     @playlist = Playlist.find(params[:id])
+    # authorize! :update, @playlist
 
     respond_to do |format|
       if @playlist.update_attributes(params[:playlist])
@@ -74,6 +81,7 @@ class PlaylistsController < ApplicationController
   def destroy
     @playlist = Playlist.find(params[:id])
     @playlist.destroy
+    # authorize! :destroy, @playlist
 
     respond_to do |format|
       format.html { redirect_to playlists_url }

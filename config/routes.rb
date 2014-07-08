@@ -22,6 +22,7 @@ devise_scope :user do
     match 'users' => 'users#index', via: :get
     match 'users/:id' => 'users#show', via: :get
 
+
     root to: "devise/registrations#new"
 
   end

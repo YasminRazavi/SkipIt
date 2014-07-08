@@ -12,4 +12,11 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require underscore
+//= require bootstrap
+//= require_self
 //= require_tree .
+
+$(document).ready( function() {
+  $('.flash').delay(4000).slideUp();
+});

@@ -2,16 +2,23 @@
 
 
 <%= image_tag("/assets/play.jpg", :class=>"play-button") %>
-  <% @playlist.tracks.each do |track| %>
-  <div id="track_<%= track.id %>">
-    <% track.pins.each_with_index do |pin, i| %>
-      <div data-pins="<%=map_pins(track)%>" data-id="<%=track.id%>" class="player" data-url="<%=track.url%>" id="track-holder-<%=track.id%>-<%=i%>" data-duration="<%=pin.stoppin-pin.startpin%>" data-start="<%=pin.startpin%>" data-stop"<%=pin.stoppin%>"</div>
-    </div>
+
+<%= link_to 'Edit',  tracks_playlist_path(@playlist) %> 
+
+<div class="active-player">
+  <div class="players-holder">
+    <% @playlist.tracks.each do |track| %>
+      <% track.pins.each_with_index do |pin, i| %>
+      <div id="track_<%= track.id %>">
+        <div data-pins="<%=map_pins(track)%>" data-id="<%=track.id%>" class="player" data-url="<%=track.url%>" id="track-holder-<%=track.id%>-<%=i%>" data-start="<%=pin.startpin%>" data-stop="<%=pin.stoppin%>">
+        </div>
+      </div>
+      <%end%>
     <%end%>
-  <%end%>
-</p>
+  </div>
+</div>
+  
 
 
 
-<%= link_to 'Edit', edit_playlist_path(@playlist) %> |
 

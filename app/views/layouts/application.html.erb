@@ -7,6 +7,9 @@
   <%= csrf_meta_tags %>
   <script src="//connect.soundcloud.com/sdk.js"></script>
   <script src="//w.soundcloud.com/player/api.js"></script>
+  <script src="//code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+  <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/themes/blitzer/jquery-ui.css" />
+
   <script>
     SC.initialize({
       client_id: "44eb1fb2fd831aed03620d757489bdd6",
@@ -15,7 +18,35 @@
   </script>
 </head>
 <body>
-
+  <header>
+    <%- flash.each do |message| %>
+      <div class='flash'><%= message[1] %></div>
+    <% end %>
+    <div class="navbar navbar-default navbar-static-top">
+  <div class="container">
+    <button class="navbar-toggle" data-target=".navbar-responsive-collapse" data-toggle="collapse" type="button">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <a class="navbar-brand" href="<%= playlists_path %>">Home</a>
+    <% if user_signed_in? %>
+      <div class="navbar-collapse collapse navbar-responsive-collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <% if user_signed_in? %>
+            <li>
+              <%= link_to "My profile", users_path(current_user) %>
+            </li>
+            <li>
+              <%= link_to "Sign out", destroy_user_session_path, method: :delete %>
+            </li>
+          <%end%>
+        </ul>
+      </div>
+    <% end %>
+  </div>
+</div>
+  </header>
 <%= yield %>
 
 </body>
