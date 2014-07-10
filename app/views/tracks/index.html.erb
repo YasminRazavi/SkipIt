@@ -1,34 +1,38 @@
+
+
 <% if @playlist !=nil %>
 
-  <h1><%= @playlist.playlist_name%></h1>
+  <%= link_to '&#9658;'.html_safe, playlist_path(@playlist.id), :class => "play-button2" %>
+  <div class="playlist-name"><h1><%= @playlist.playlist_name%></h1></div>
+
 <%end%>
 
-<% if current_user== @tracks.first.user %>
+<% if current_user== @playlist.user %>
 <div class="input-append">
   <input class="new_track" placeholder=" track url here..."></input>
-  <button class="btn" id="new_track_button" data-id="<%= @tracks.first.playlist_id%>">Add Track</button>
+  <button class="btn" id="new_track_button" data-id="<%= @playlist.id%>">Add Track</button>
 </div>
 <%end%>
 
 
 <table class="table_tracks_for_edit">
 <% @tracks.each do |track| %>
-  <tr class="add_pin_to_track" data-id="<%=track.id%>">  
-   <td> <div class="new_play_range start" id="play_range_start-<%=track.id%>" >hi</div>
-    <div class="new_play_range stop" id="play_range_stop-<%=track.id%>" >hi</div>
-    <div class="update start" data-track="<%=track.id%>">START</div>
-    <div class="update restart" data-track="<%=track.id%>">RESTART</div>
-    <div class="update save" data-track="<%=track.id%>">SAVE</div>
+  <tr class="add_pin_to_track" id="add_pin_to_track-<%=track.id%>" data-id="<%=track.id%>">  
+   <td> <div class="new_play_range start" id="play_range_start-<%=track.id%>" >0</div>
+    <div class="new_play_range stop" id="play_range_stop-<%=track.id%>" >0</div>
+    <div class="button start" data-track="<%=track.id%>" id="button_start-<%=track.id%>">START</div>
+    <div class="button restart" data-track="<%=track.id%>" >RESTART</div>
+    <div class="button save" data-track="<%=track.id%>">SAVE</div>
   </td>
   </tr>
 <% if current_user== @tracks.first.user %>
   <tr class="buttons">
     <td class="edit-track" data-id="<%= track.id %>"><%= link_to 'Edit', edit_track_path(track), class: "edit_track_button"%></td>
-    <td class="delete-track-<%= track.id %>"><%= link_to 'Delete', track, method: :delete, data: { confirm: 'Are you sure?' }, :class=>"edit_track_button"%></td>
-    <td class="pin-track-<%= track.id %>"><%= link_to 'Pin', new_pin_path(), :class=>"edit_track_button"%></td>
+    <td id="delete-track" data-id="<%= track.id %>"><%= link_to 'Delete', track, method: :delete, data: { confirm: 'Are you sure?' }, :class=>"edit_track_button"%></td>
+    <td class="new-pin-track" data-id="<%= track.id %>"><%= link_to 'Pin', new_pin_path(), :class=>"edit_track_button"%></td>
   </tr>
 <%end%>
-  <tr class="tracks_for_edit">
+  <tr class="tracks_for_edit" data-track='<%= track.id %>'>
       <td class="players-holder">  
           <div id="track_<%= track.id %>">
             <div data-pins="<%=map_pins(track)%>" data-id="<%=track.id%>" class="player edit" data-url="<%=track.url%>" id="track-holder-<%=track.id%>" data-duration="<%=track.duration%>"></div>
@@ -37,17 +41,22 @@
   </tr>
 
   <% if track.pins != nil %>
-    <% track.pins.each_with_index do |pin, i| %>
-    <tr class="pins_for_edit_container" data-track="<%=track.id%>" data-pin="<%=pin.id%>" id="pins-<%=track.id%>">
-      <td>
-      <div class="pins" data-track="<%= track.id %>", data-pin="<%=pin.id%>" id="pin-<%=track.id%>-<%=pin.id%>" data-start="<%=pin.startpin%>" data-stop="<%=pin.stoppin%>" data-duration="<%=pin.track.duration%>"></div>    
-      <div class="play_range start" id="play_range_start-<%=track.id%>-<%=pin.id%>" >hi</div>
-      <div class="play_range stop" id="play_range_stop-<%=track.id%>-<%=pin.id%>" >hi</div>
-      <div class="update" data-track="<%=track.id%>" data-pin="<%=pin.id%>">UPDATE</div>
+    <div class="edit_container"data-track="<%=track.id%>">
+      <% track.pins.each_with_index do |pin, i| %>
+      <tr class="pins_for_edit_container" data-track="<%=track.id%>" data-pin="<%=pin.id%>" id="pins-<%=track.id%>">
+        <td>
+        <div class="pins" data-track="<%= track.id %>", data-pin="<%=pin.id%>" id="pin-<%=track.id%>-<%=pin.id%>" data-start="<%=pin.startpin%>" data-stop="<%=pin.stoppin%>" data-duration="<%=pin.track.duration%>"></div>    
+        <div class="play_range start" id="play_range_start-<%=track.id%>-<%=pin.id%>" ></div>
+        <div class="play_range stop" id="play_range_stop-<%=track.id%>-<%=pin.id%>" ></div>
+        <div class="update" data-track="<%=track.id%>" data-pin="<%=pin.id%>">UPDATE</div>
+        <div class="update" id="delete-pin" data-track="<%=track.id%>" data-pin="<%=pin.id%>">DELETE</div>
 
-       </td>
-    </tr>
-    <%end%>
+         </td>
+      </tr>
+      <%end%>
+   </div>
+  <%else%>
+  <div class="edit_container"data-track="<%=track.id%>"></div> 
   <%end%>  
 <% end %>
 </table>

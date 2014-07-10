@@ -1,0 +1,20 @@
+
+
+
+<div class="user-playlist new">NEW PLAYLIST</div>
+<div class = "new-playlist-form">
+  <input class="new-playlist-name" placeholder=" enter new playlist name"></input>
+  <div class="save-playlist-btn"> save </div>
+
+</div>
+
+<table class="user-playlists">
+
+<% @user.playlists.each do |playlist| %>
+  <tr>
+    <td><%= link_to playlist.playlist_name, tracks_playlist_path(playlist.id), :class=>"user-playlist name"%></td>
+    <td><%= link_to playlist.tracks.length, tracks_playlist_path(playlist.id), :class=>"user-playlist count"%></td>
+  </tr>
+
+<%end%>
+</table>

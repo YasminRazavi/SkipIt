@@ -45,6 +45,7 @@ class PlaylistsController < ApplicationController
   # POST /playlists
   # POST /playlists.json
   def create
+    params[:playlist][:user_id] = current_user.id
     @playlist = Playlist.new(params[:playlist])
     # authorize! :create, @playlist
 

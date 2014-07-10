@@ -6,7 +6,7 @@
 <%= link_to 'Edit',  tracks_playlist_path(@playlist) %> 
 
 <div class="active-player">
-  <div class="play-button"></div>
+  <div class="play-button">&#9658;</div>
   <div class="players-holder">
     <% @playlist.tracks.each do |track| %>
       <% if !track.pins.empty? %>

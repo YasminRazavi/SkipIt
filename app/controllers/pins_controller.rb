@@ -16,10 +16,11 @@ class PinsController < ApplicationController
   # GET /pins/1.json
   def show
     @pin = Pin.find(params[:id])
-
+    pin_extended = @pin.attributes.merge(track_duration: @pin.track.try(:duration))
+   
     respond_to do |format|
       format.html # show.html.erb
-      format.json { render json: @pin }
+      format.json { render json: pin_extended }
     end
   end
 
@@ -50,8 +51,10 @@ class PinsController < ApplicationController
 
     respond_to do |format|
       if @pin.save
+        pin_extended = @pin.attributes.merge(track_duration: @pin.track.try(:duration))
+
         format.html { redirect_to @pin, notice: 'Pin was successfully created.' }
-        format.json { render json: @pin, status: :created, location: @pin }
+        format.json { render json: pin_extended, status: :created, location: @pin }
       else
         format.html { render action: "new" }
         format.json { render json: @pin.errors, status: :unprocessable_entity }
